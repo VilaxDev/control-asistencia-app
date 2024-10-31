@@ -1,14 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:power/pages/login_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
 import '../models/user_info_model.dart';
-
-import 'package:flutter/material.dart';
-import 'package:power/pages/login_page.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import '../models/user_info_model.dart';
-import '../services/user_service.dart'; // Asegúrate de tener este archivo
+import '../services/user_service.dart';
 
 class ProfilePage extends StatefulWidget {
   @override
@@ -39,6 +33,28 @@ class _ProfilePageState extends State<ProfilePage> {
     try {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       await prefs.clear();
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: const Row(
+            children: [
+              Icon(
+                Icons.logout_outlined,
+                color: Colors.white,
+              ),
+              SizedBox(width: 8),
+              Expanded(
+                child: Text(
+                  'Sesión Cerrada Correctamente',
+                  style: TextStyle(color: Colors.white),
+                ),
+              ),
+            ],
+          ),
+          backgroundColor: Colors.red[400],
+          behavior: SnackBarBehavior.floating,
+          duration: const Duration(seconds: 2),
+        ),
+      );
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (context) => LoginPage()),
@@ -189,6 +205,12 @@ class _ProfilePageState extends State<ProfilePage> {
                           icon: Icons.badge,
                           title: "ID de Colaborador",
                           value: userInfo.colaborador.id.toString(),
+                        ),
+                        SizedBox(height: 12),
+                        _buildInfoCard(
+                          icon: Icons.badge,
+                          title: "Periodo",
+                          value: userInfo.periodo.anio.toString(),
                         ),
                       ],
                     ),

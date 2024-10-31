@@ -3,12 +3,16 @@ class UserInfoModel {
   User user;
   Colaborador colaborador;
   Horario horario;
+  Periodo periodo;
+  List<Evento> eventos;
 
   UserInfoModel({
     required this.message,
     required this.user,
     required this.colaborador,
     required this.horario,
+    required this.periodo,
+    required this.eventos,
   });
 
   factory UserInfoModel.fromJson(Map<String, dynamic> json) => UserInfoModel(
@@ -16,6 +20,9 @@ class UserInfoModel {
         user: User.fromJson(json["user"]),
         colaborador: Colaborador.fromJson(json["colaborador"]),
         horario: Horario.fromJson(json["horario"]),
+        periodo: Periodo.fromJson(json["periodo"]),
+        eventos:
+            List<Evento>.from(json["eventos"].map((x) => Evento.fromJson(x))),
       );
 
   Map<String, dynamic> toJson() => {
@@ -23,6 +30,8 @@ class UserInfoModel {
         "user": user.toJson(),
         "colaborador": colaborador.toJson(),
         "horario": horario.toJson(),
+        "periodo": periodo.toJson(),
+        "eventos": List<dynamic>.from(eventos.map((x) => x.toJson())),
       };
 }
 
@@ -60,6 +69,31 @@ class Colaborador {
       };
 }
 
+class Evento {
+  int id;
+  DateTime fecha;
+  String descripcion;
+
+  Evento({
+    required this.id,
+    required this.fecha,
+    required this.descripcion,
+  });
+
+  factory Evento.fromJson(Map<String, dynamic> json) => Evento(
+        id: json["id"],
+        fecha: DateTime.parse(json["fecha"]),
+        descripcion: json["descripcion"],
+      );
+
+  Map<String, dynamic> toJson() => {
+        "id": id,
+        "fecha":
+            "${fecha.year.toString().padLeft(4, '0')}-${fecha.month.toString().padLeft(2, '0')}-${fecha.day.toString().padLeft(2, '0')}",
+        "descripcion": descripcion,
+      };
+}
+
 class Horario {
   int id;
   String horaEntrada;
@@ -85,6 +119,36 @@ class Horario {
         "hora_entrada": horaEntrada,
         "hora_salida": horaSalida,
         "dias_laborales": List<dynamic>.from(diasLaborales.map((x) => x)),
+      };
+}
+
+class Periodo {
+  int id;
+  int anio;
+  DateTime fechaInicio;
+  DateTime fechaFin;
+
+  Periodo({
+    required this.id,
+    required this.anio,
+    required this.fechaInicio,
+    required this.fechaFin,
+  });
+
+  factory Periodo.fromJson(Map<String, dynamic> json) => Periodo(
+        id: json["id"],
+        anio: json["anio"],
+        fechaInicio: DateTime.parse(json["fecha_inicio"]),
+        fechaFin: DateTime.parse(json["fecha_fin"]),
+      );
+
+  Map<String, dynamic> toJson() => {
+        "id": id,
+        "anio": anio,
+        "fecha_inicio":
+            "${fechaInicio.year.toString().padLeft(4, '0')}-${fechaInicio.month.toString().padLeft(2, '0')}-${fechaInicio.day.toString().padLeft(2, '0')}",
+        "fecha_fin":
+            "${fechaFin.year.toString().padLeft(4, '0')}-${fechaFin.month.toString().padLeft(2, '0')}-${fechaFin.day.toString().padLeft(2, '0')}",
       };
 }
 

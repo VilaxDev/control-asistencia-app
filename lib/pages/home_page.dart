@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:power/models/user_info_model.dart';
-import 'package:power/pages/login_page.dart';
 import 'package:power/pages/profile_page.dart';
 import 'package:power/services/asistencia_service.dart';
 import 'package:power/services/user_service.dart';
 import 'package:intl/intl.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -351,7 +349,7 @@ class _HomePageState extends State<HomePage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(icon, size: 32, color: Colors.white),
-            SizedBox(height: 8),
+            const SizedBox(height: 8),
             Text(
               title,
               textAlign: TextAlign.center,
