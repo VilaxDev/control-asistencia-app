@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:power/models/user_info_model.dart';
 import 'package:power/pages/profile_page.dart';
 import 'package:power/services/asistencia_service.dart';
@@ -14,7 +15,10 @@ class _HomePageState extends State<HomePage> {
   String _responseMessage = "";
   int? _colaboradorId;
   bool _isDiaLaboral = false; // Nueva variable para controlar si es día laboral
+  bool _isDiaEvento = false;
   List<String> _diasLaborales = []; // Para almacenar los días laborales
+  List<Evento> _eventosHoy = [];
+  int _selectedIndex = 0;
 
   final AsistenciaService _asistenciaService = AsistenciaService();
   final UserService _userService = UserService();
@@ -29,7 +33,7 @@ class _HomePageState extends State<HomePage> {
       3: 'miercoles',
       4: 'jueves',
       5: 'viernes',
-      6: 'sábado',
+      6: 'sabado',
       7: 'domingo',
     };
     return diasSemana[now.weekday] ?? '';
@@ -49,6 +53,10 @@ class _HomePageState extends State<HomePage> {
       print("Usuario: ${userInfo.user.nombre}");
       print("Colaborador ID: ${userInfo.colaborador.id}");
       print("Dias Laborales: ${userInfo.horario.diasLaborales}");
+      print("Periodo Año:  ${userInfo.periodo.anio}");
+      print("Fecha Inicio:  ${userInfo.periodo.fechaInicio}");
+      print("Fecha fin:  ${userInfo.periodo.fechaFin}");
+      print("Eventos:  ${userInfo.eventos}");
 
       String diaActual = _getCurrentDay();
       print("Día actual: $diaActual");
@@ -57,10 +65,20 @@ class _HomePageState extends State<HomePage> {
       bool esDiaLaboral = userInfo.horario.diasLaborales.contains(diaActual);
       print("¿Es día laboral?: $esDiaLaboral");
 
+      // Verificar si hay eventos para la fecha actual
+      DateTime now = DateTime.now();
+      List<Evento> eventosHoy = userInfo.eventos.where((evento) {
+        return evento.fecha.year == now.year &&
+            evento.fecha.month == now.month &&
+            evento.fecha.day == now.day;
+      }).toList();
+
       setState(() {
         _colaboradorId = userInfo.colaborador.id;
         _diasLaborales = userInfo.horario.diasLaborales;
         _isDiaLaboral = esDiaLaboral;
+        _isDiaEvento = eventosHoy.isNotEmpty;
+        _eventosHoy = eventosHoy;
       });
     } else {
       print("No hay información de usuario guardada.");
@@ -129,6 +147,7 @@ class _HomePageState extends State<HomePage> {
             fontWeight: FontWeight.w600,
           ),
         ),
+        automaticallyImplyLeading: false,
         actions: [
           IconButton(
             icon: CircleAvatar(
@@ -148,7 +167,88 @@ class _HomePageState extends State<HomePage> {
       ),
       body: Container(
         padding: EdgeInsets.all(20),
-        child: _isDiaLaboral ? _buildWorkdayView() : _buildNonWorkdayView(),
+        child: _isDiaEvento
+            ? _buildEventView()
+            : (_isDiaLaboral ? _buildWorkdayView() : _buildNonWorkdayView()),
+      ),
+      bottomNavigationBar: Container(
+        decoration: BoxDecoration(
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.withOpacity(0.2),
+              spreadRadius: 5,
+              blurRadius: 10,
+            ),
+          ],
+        ),
+        child: BottomNavigationBar(
+          items: [
+            BottomNavigationBarItem(
+              icon: ColorFiltered(
+                colorFilter: ColorFilter.mode(
+                  _selectedIndex == 0 ? Colors.blue[600]! : Colors.grey[400]!,
+                  // Cambiar color según selección
+                  BlendMode.srcIn,
+                ),
+                child: SvgPicture.asset(
+                  'assets/images/icons/home.svg', // Ruta de tu archivo SVG
+                  height: 24, // Ajusta el tamaño del ícono
+                  width: 24,
+                ),
+              ),
+              label: 'Inicio',
+            ),
+            BottomNavigationBarItem(
+              icon: ColorFiltered(
+                colorFilter: ColorFilter.mode(
+                  _selectedIndex == 1 ? Colors.blue[600]! : Colors.grey[400]!,
+                  // Cambiar color según selección
+                  BlendMode.srcIn,
+                ),
+                child: SvgPicture.asset(
+                  'assets/images/icons/user.svg', // Ruta de tu archivo SVG
+                  height: 24, // Ajusta el tamaño del ícono
+                  width: 24,
+                ),
+              ),
+              label: 'Perfil',
+            ),
+          ],
+          currentIndex: 0,
+          selectedItemColor: Colors.blue[600],
+          unselectedItemColor: Colors.grey[400],
+          backgroundColor: Colors.white,
+          elevation: 0,
+          onTap: (index) {
+            setState(() {
+              _selectedIndex = index; // Actualizar el índice seleccionado
+            });
+
+            if (index == 1) {
+              // Usamos PageRouteBuilder para controlar la animación de transición
+              Navigator.push(
+                context,
+                PageRouteBuilder(
+                  pageBuilder: (context, animation, secondaryAnimation) =>
+                      ProfilePage(),
+                  transitionsBuilder:
+                      (context, animation, secondaryAnimation, child) {
+                    var opacity =
+                        Tween(begin: 0.0, end: 1.0).animate(CurvedAnimation(
+                      parent: animation,
+                      curve: Curves.easeInOut, // Curva suave para la transición
+                    ));
+
+                    // Aplicamos la animación de desvanecimiento
+                    return FadeTransition(opacity: opacity, child: child);
+                  },
+                ),
+              );
+            }
+            // Puedes agregar más navegación para los otros índices cuando
+            // tengas las otras páginas listas
+          },
+        ),
       ),
     );
   }
@@ -253,6 +353,88 @@ class _HomePageState extends State<HomePage> {
               ],
             ),
           ),
+      ],
+    );
+  }
+
+  Widget _buildEventView() {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Container(
+          padding: EdgeInsets.all(30),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(20),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.grey.withOpacity(0.1),
+                blurRadius: 20,
+                offset: Offset(0, 5),
+              ),
+            ],
+          ),
+          child: Column(
+            children: [
+              Container(
+                padding: EdgeInsets.all(20),
+                decoration: BoxDecoration(
+                  color: Colors.amber[100],
+                  shape: BoxShape.circle,
+                ),
+                child: Icon(
+                  Icons.event,
+                  size: 60,
+                  color: Colors.amber[700],
+                ),
+              ),
+              SizedBox(height: 25),
+              Text(
+                "¡Hoy es un día de evento!",
+                style: TextStyle(
+                  fontSize: 22,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.grey[800],
+                ),
+              ),
+              SizedBox(height: 20),
+              Column(
+                children: _eventosHoy
+                    .map((evento) => Container(
+                          margin: EdgeInsets.only(bottom: 15),
+                          padding: EdgeInsets.all(15),
+                          decoration: BoxDecoration(
+                            color: Colors.amber[50],
+                            borderRadius: BorderRadius.circular(15),
+                            border: Border.all(color: Colors.amber[200]!),
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                evento.descripcion,
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.w600,
+                                  color: Colors.grey[800],
+                                ),
+                              ),
+                              SizedBox(height: 8),
+                              Text(
+                                DateFormat('dd/MM/yyyy').format(evento.fecha),
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  color: Colors.grey[600],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ))
+                    .toList(),
+              ),
+            ],
+          ),
+        ),
       ],
     );
   }

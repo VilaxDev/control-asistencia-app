@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:power/pages/home_page.dart';
 import 'package:power/pages/login_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../models/user_info_model.dart';
@@ -13,6 +15,7 @@ class _ProfilePageState extends State<ProfilePage> {
   final UserService _userService =
       UserService(); // Servicio para manejar datos del usuario
   Future<UserInfoModel?>? _userInfoFuture;
+  int _selectedIndex = 1;
 
   @override
   void initState() {
@@ -74,6 +77,7 @@ class _ProfilePageState extends State<ProfilePage> {
       appBar: AppBar(
         elevation: 0,
         backgroundColor: Colors.white,
+        centerTitle: true,
         title: Text(
           "Mi Perfil",
           style: TextStyle(
@@ -81,6 +85,7 @@ class _ProfilePageState extends State<ProfilePage> {
             fontWeight: FontWeight.w600,
           ),
         ),
+        automaticallyImplyLeading: false,
         actions: [
           IconButton(
             icon: Icon(Icons.logout, color: Colors.red[400]),
@@ -186,7 +191,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
+                        const Text(
                           "Información Personal",
                           style: TextStyle(
                             fontSize: 18,
@@ -237,6 +242,85 @@ class _ProfilePageState extends State<ProfilePage> {
             );
           }
         },
+      ),
+      bottomNavigationBar: Container(
+        decoration: BoxDecoration(
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.withOpacity(0.2),
+              spreadRadius: 5,
+              blurRadius: 10,
+            ),
+          ],
+        ),
+        child: BottomNavigationBar(
+          items: [
+            BottomNavigationBarItem(
+              icon: ColorFiltered(
+                colorFilter: ColorFilter.mode(
+                  _selectedIndex == 0 ? Colors.blue[600]! : Colors.grey[400]!,
+                  // Cambiar color según selección
+                  BlendMode.srcIn,
+                ),
+                child: SvgPicture.asset(
+                  'assets/images/icons/home.svg', // Ruta de tu archivo SVG
+                  height: 24, // Ajusta el tamaño del ícono
+                  width: 24,
+                ),
+              ),
+              label: 'Inicio',
+            ),
+            BottomNavigationBarItem(
+              icon: ColorFiltered(
+                colorFilter: ColorFilter.mode(
+                  _selectedIndex == 1 ? Colors.blue[600]! : Colors.grey[400]!,
+                  // Cambiar color según selección
+                  BlendMode.srcIn,
+                ),
+                child: SvgPicture.asset(
+                  'assets/images/icons/user.svg', // Ruta de tu archivo SVG
+                  height: 24, // Ajusta el tamaño del ícono
+                  width: 24,
+                ),
+              ),
+              label: 'Perfil',
+            ),
+          ],
+          currentIndex: 1,
+          selectedItemColor: Colors.blue[600],
+          unselectedItemColor: Colors.grey[400],
+          backgroundColor: Colors.white,
+          elevation: 0,
+          onTap: (index) {
+            setState(() {
+              _selectedIndex = index; // Actualizar el índice seleccionado
+            });
+
+            if (index == 0) {
+              // Usamos PageRouteBuilder para controlar la animación de transición
+              Navigator.push(
+                context,
+                PageRouteBuilder(
+                  pageBuilder: (context, animation, secondaryAnimation) =>
+                      HomePage(),
+                  transitionsBuilder:
+                      (context, animation, secondaryAnimation, child) {
+                    var opacity =
+                        Tween(begin: 0.0, end: 1.0).animate(CurvedAnimation(
+                      parent: animation,
+                      curve: Curves.easeInOut, // Curva suave para la transición
+                    ));
+
+                    // Aplicamos la animación de desvanecimiento
+                    return FadeTransition(opacity: opacity, child: child);
+                  },
+                ),
+              );
+            }
+            // Puedes agregar más navegación para los otros índices cuando
+            // tengas las otras páginas listas
+          },
+        ),
       ),
     );
   }
