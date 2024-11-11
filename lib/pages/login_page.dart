@@ -52,7 +52,7 @@ class _LoginPageState extends State<LoginPage> {
                     Icons.check_circle_outline,
                     color: Colors.white,
                   ),
-                  SizedBox(width: 8),
+                  SizedBox(width: 5),
                   Expanded(
                     child: Text(
                       'Sesión Iniciada Correctamente',
@@ -64,6 +64,9 @@ class _LoginPageState extends State<LoginPage> {
               backgroundColor: Colors.green[400],
               behavior: SnackBarBehavior.floating,
               duration: const Duration(seconds: 2),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
             ),
           );
           Navigator.pushReplacement(
@@ -73,7 +76,9 @@ class _LoginPageState extends State<LoginPage> {
         } else {
           _showError("Credenciales inválidas");
         }
-      } else if (response.statusCode == 401 || response.statusCode == 404) {
+      } else if (response.statusCode == 401 ||
+          response.statusCode == 404 ||
+          response.statusCode == 409) {
         // Manejo de errores específicos para el estado 400
         var errorData = jsonDecode(response.body);
         String errorMessage = errorData['error'] ?? "Error desconocido";
@@ -97,6 +102,7 @@ class _LoginPageState extends State<LoginPage> {
               Icons.error_outline,
               color: Colors.white,
             ),
+            SizedBox(width: 5),
             Expanded(
               child: Text(
                 message,
@@ -107,6 +113,9 @@ class _LoginPageState extends State<LoginPage> {
         ),
         backgroundColor: Colors.red[400],
         behavior: SnackBarBehavior.floating,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12),
+        ),
       ),
     );
   }

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:power/pages/home_page.dart';
 import 'package:power/pages/login_page.dart';
+import 'package:power/services/logout_token_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../models/user_info_model.dart';
 import '../services/user_service.dart';
@@ -16,6 +17,7 @@ class _ProfilePageState extends State<ProfilePage> {
       UserService(); // Servicio para manejar datos del usuario
   Future<UserInfoModel?>? _userInfoFuture;
   int _selectedIndex = 1;
+  final LogoutTokenService _logoutTokenService = LogoutTokenService();
 
   @override
   void initState() {
@@ -35,6 +37,32 @@ class _ProfilePageState extends State<ProfilePage> {
   Future<void> _logout(BuildContext context) async {
     try {
       SharedPreferences prefs = await SharedPreferences.getInstance();
+      final userInfo = await _userInfoFuture;
+      // Verificar que la información del usuario no es nula
+      if (userInfo == null || userInfo.user == null) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+              content: Text("Error: Información del usuario no encontrada")),
+        );
+        return;
+      }
+
+      // Obtener el ID del usuario
+      int? idUsuario = userInfo.user?.id;
+
+      // Si el ID de usuario no está disponible, mostramos un mensaje de error
+      if (idUsuario == null) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("Error: ID de usuario no encontrado")),
+        );
+        return;
+      }
+      // Llamar al servicio de actualización de token
+      String? updateMessage =
+          await _logoutTokenService.updateToken(idUsuario, context);
+      if (updateMessage != null) {
+        print(updateMessage); // Muestra el mensaje de la respuesta
+      }
       await prefs.clear();
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -44,7 +72,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 Icons.logout_outlined,
                 color: Colors.white,
               ),
-              SizedBox(width: 8),
+              SizedBox(width: 5),
               Expanded(
                 child: Text(
                   'Sesión Cerrada Correctamente',
@@ -56,6 +84,9 @@ class _ProfilePageState extends State<ProfilePage> {
           backgroundColor: Colors.red[400],
           behavior: SnackBarBehavior.floating,
           duration: const Duration(seconds: 2),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
         ),
       );
       Navigator.pushReplacement(
@@ -209,7 +240,7 @@ class _ProfilePageState extends State<ProfilePage> {
                         _buildInfoCard(
                           icon: Icons.badge,
                           title: "ID de Colaborador",
-                          value: userInfo.colaborador.id.toString(),
+                          value: userInfo.user.id.toString(),
                         ),
                         SizedBox(height: 12),
                         _buildInfoCard(

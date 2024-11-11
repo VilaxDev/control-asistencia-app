@@ -100,9 +100,8 @@ class _HomePageState extends State<HomePage> {
   // Registrar la entrada
   void registerEntrada() async {
     if (_colaboradorId == null) {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content:
-              Text("Error: Colaborador no encontrado en SharedPreferences.")));
+      showErrorSnackBar(
+          "Error: Colaborador no encontrado en SharedPreferences.");
       return;
     }
 
@@ -112,11 +111,82 @@ class _HomePageState extends State<HomePage> {
     String? result = await _asistenciaService.registerEntrada(
         _colaboradorId!, currentTime, currentDate, context);
 
-    // Mostrar el mensaje del resultado
     if (result != null) {
-      ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text(result)));
+      showRegisteredEntradaSnackBar(result);
     }
+  }
+
+  void showRegisteredEntradaSnackBar(String message) {
+    // Verificar si el mensaje es un error o éxito
+    bool isError = message.startsWith("Error:");
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 2.0),
+          child: Row(
+            children: [
+              Icon(
+                isError ? Icons.error_outline : Icons.check_circle,
+                color: Colors.white,
+                size: 20,
+              ),
+              const SizedBox(width: 5),
+              Expanded(
+                child: Text(
+                  message,
+                  style: const TextStyle(
+                    fontSize: 12,
+                    fontWeight: FontWeight.w500,
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+        backgroundColor: isError ? Colors.red[600] : Colors.green[600],
+        behavior: SnackBarBehavior.floating,
+        elevation: 6.0,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16.0),
+        ),
+        margin: const EdgeInsets.only(bottom: 15.0, left: 16.0, right: 16.0),
+      ),
+    );
+  }
+
+  void showErrorSnackBar(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 5.0),
+          child: Row(
+            children: [
+              const Icon(Icons.error, color: Colors.white, size: 20),
+              const SizedBox(width: 5),
+              Expanded(
+                child: Text(
+                  message,
+                  style: const TextStyle(
+                    fontSize: 12,
+                    fontWeight: FontWeight.w500,
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+        backgroundColor: Colors.red[600],
+        behavior: SnackBarBehavior.floating,
+        elevation: 6.0,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16.0),
+        ),
+        margin: const EdgeInsets.only(bottom: 15.0, left: 16.0, right: 16.0),
+      ),
+    );
   }
 
   // Actualizar la salida
@@ -126,11 +196,49 @@ class _HomePageState extends State<HomePage> {
     String? result =
         await _asistenciaService.updateSalida(currentTime, context);
 
-    // Mostrar el mensaje del resultado
     if (result != null) {
-      ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text(result)));
+      showUpdatedSalidaSnackBar(result);
     }
+  }
+
+  void showUpdatedSalidaSnackBar(String message) {
+    // Verificar si el mensaje es un error
+    bool isError = message.startsWith("Error:");
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 5.0),
+          child: Row(
+            children: [
+              Icon(
+                isError ? Icons.error_outline : Icons.check_circle,
+                color: Colors.white,
+                size: 20,
+              ),
+              const SizedBox(width: 5),
+              Expanded(
+                child: Text(
+                  message,
+                  style: const TextStyle(
+                    fontSize: 12,
+                    fontWeight: FontWeight.w500,
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+        backgroundColor: isError ? Colors.red[600] : Colors.green[600],
+        behavior: SnackBarBehavior.floating,
+        elevation: 6.0,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16.0),
+        ),
+        margin: const EdgeInsets.only(bottom: 15.0, left: 16.0, right: 16.0),
+      ),
+    );
   }
 
   @override
