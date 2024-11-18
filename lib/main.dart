@@ -1,12 +1,12 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
-import 'package:power/api.dart';
-import 'package:power/models/user_info_model.dart';
-import 'package:power/services/user_service.dart';
+import 'package:AsistePro/api.dart';
+import 'package:AsistePro/models/user_info_model.dart';
+import 'package:AsistePro/services/user_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:power/pages/login_page.dart';
-import 'package:power/pages/home_page.dart';
+import 'package:AsistePro/pages/login_page.dart';
+import 'package:AsistePro/pages/home_page.dart';
 
 void main() {
   runApp(MyApp());
@@ -19,8 +19,11 @@ class MyApp extends StatelessWidget {
       title: 'Flutter Demo',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
+          primarySwatch: Colors.blue,
+          textSelectionTheme: TextSelectionThemeData(
+              cursorColor: Colors.blue[600],
+              selectionColor: Colors.blue[200],
+              selectionHandleColor: Colors.blue[600])),
       home: MainPage(),
     );
   }

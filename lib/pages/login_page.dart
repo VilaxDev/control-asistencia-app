@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:power/api.dart';
-import 'package:power/models/user_info_model.dart';
-import 'package:power/pages/home_page.dart';
+import 'package:AsistePro/Config/device_identifier.dart';
+import 'package:AsistePro/api.dart';
+import 'package:AsistePro/models/user_info_model.dart';
+import 'package:AsistePro/pages/home_page.dart';
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -27,12 +28,16 @@ class _LoginPageState extends State<LoginPage> {
     try {
       String email = emailController.text;
       String password = passwordController.text;
+      String deviceId = await DeviceIdentifier.getDeviceId();
 
       var url = Uri.parse('${AppConfig.baseUrl}/colaborador/login');
-
+      print('URL de la petición: $url');
+      print(
+          'Datos enviados: {email: $email, password: $password, imei: $deviceId}');
       var response = await http.post(
         url,
-        body: jsonEncode({'email': email, 'password': password}),
+        body: jsonEncode(
+            {'email': email, 'password': password, 'imei': deviceId}),
         headers: {'Content-Type': 'application/json'},
       );
 

@@ -124,31 +124,21 @@ class Horario {
 
 class Periodo {
   int id;
-  int anio;
-  DateTime fechaInicio;
-  DateTime fechaFin;
+  String anio;
 
   Periodo({
     required this.id,
     required this.anio,
-    required this.fechaInicio,
-    required this.fechaFin,
   });
 
   factory Periodo.fromJson(Map<String, dynamic> json) => Periodo(
         id: json["id"],
         anio: json["anio"],
-        fechaInicio: DateTime.parse(json["fecha_inicio"]),
-        fechaFin: DateTime.parse(json["fecha_fin"]),
       );
 
   Map<String, dynamic> toJson() => {
         "id": id,
         "anio": anio,
-        "fecha_inicio":
-            "${fechaInicio.year.toString().padLeft(4, '0')}-${fechaInicio.month.toString().padLeft(2, '0')}-${fechaInicio.day.toString().padLeft(2, '0')}",
-        "fecha_fin":
-            "${fechaFin.year.toString().padLeft(4, '0')}-${fechaFin.month.toString().padLeft(2, '0')}-${fechaFin.day.toString().padLeft(2, '0')}",
       };
 }
 

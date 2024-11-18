@@ -1,6 +1,6 @@
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
-import 'package:power/models/user_info_model.dart';
+import 'package:AsistePro/models/user_info_model.dart';
 
 class UserService {
   // Obtener información del usuario desde SharedPreferences

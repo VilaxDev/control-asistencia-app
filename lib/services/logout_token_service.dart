@@ -1,7 +1,7 @@
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:power/api.dart';
+import 'package:AsistePro/api.dart';
 
 class LogoutTokenService {
   // Petición PUT para deshacer el token

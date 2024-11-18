@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:power/models/user_info_model.dart';
-import 'package:power/pages/profile_page.dart';
-import 'package:power/services/asistencia_service.dart';
-import 'package:power/services/user_service.dart';
+import 'package:AsistePro/models/user_info_model.dart';
+import 'package:AsistePro/pages/justificacion_page.dart';
+import 'package:AsistePro/pages/profile_page.dart';
+import 'package:AsistePro/services/asistencia_service.dart';
+import 'package:AsistePro/services/user_service.dart';
 import 'package:intl/intl.dart';
 
 class HomePage extends StatefulWidget {
@@ -54,8 +55,6 @@ class _HomePageState extends State<HomePage> {
       print("Colaborador ID: ${userInfo.colaborador.id}");
       print("Dias Laborales: ${userInfo.horario.diasLaborales}");
       print("Periodo Año:  ${userInfo.periodo.anio}");
-      print("Fecha Inicio:  ${userInfo.periodo.fechaInicio}");
-      print("Fecha fin:  ${userInfo.periodo.fechaFin}");
       print("Eventos:  ${userInfo.eventos}");
 
       String diaActual = _getCurrentDay();
@@ -435,6 +434,23 @@ class _HomePageState extends State<HomePage> {
           ],
         ),
         SizedBox(height: 25),
+        TextButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => JustificacionPage()),
+              );
+            },
+            child: Text(
+              '¿Deseas justificar tu asistencia?',
+              style: TextStyle(
+                color: Colors.blue[600],
+                decoration: TextDecoration.underline,
+                decorationColor: Colors.blue[600],
+                decorationThickness: 1,
+                height: 1.5,
+              ),
+            )),
 
         // Mensaje de respuesta
         if (_responseMessage.isNotEmpty)

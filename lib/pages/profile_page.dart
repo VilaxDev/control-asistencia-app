@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:power/pages/home_page.dart';
-import 'package:power/pages/login_page.dart';
-import 'package:power/services/logout_token_service.dart';
+import 'package:AsistePro/pages/home_page.dart';
+import 'package:AsistePro/pages/login_page.dart';
+import 'package:AsistePro/services/logout_token_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../models/user_info_model.dart';
 import '../services/user_service.dart';
@@ -244,7 +244,7 @@ class _ProfilePageState extends State<ProfilePage> {
                         ),
                         SizedBox(height: 12),
                         _buildInfoCard(
-                          icon: Icons.badge,
+                          icon: Icons.date_range,
                           title: "Periodo",
                           value: userInfo.periodo.anio.toString(),
                         ),

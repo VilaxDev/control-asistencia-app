@@ -2,7 +2,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:power/api.dart';
+import 'package:AsistePro/api.dart';
 
 class AsistenciaService {
   // Petición POST para registrar la hora de entrada
