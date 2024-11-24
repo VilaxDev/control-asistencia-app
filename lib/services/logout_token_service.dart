@@ -6,7 +6,7 @@ import 'package:AsistePro/api.dart';
 class LogoutTokenService {
   // Petición PUT para deshacer el token
   Future<String?> updateToken(int idUsuario, BuildContext context) async {
-    var url = Uri.parse('${AppConfig.baseUrl}/update/token/usuario/$idUsuario');
+    var url = Uri.parse('${AppConfig.baseUrl}/update/imei/usuario/$idUsuario');
 
     print("Haciendo petición PUT a: $url");
 

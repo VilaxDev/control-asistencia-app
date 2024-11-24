@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:AsistePro/models/user_info_model.dart';
 import 'package:AsistePro/services/justificacion_service.dart';
 import 'package:AsistePro/services/user_service.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 
 class JustificacionPage extends StatefulWidget {
   const JustificacionPage({super.key});
@@ -117,121 +118,194 @@ class _JustificacionPageState extends State<JustificacionPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
-        title: const Text('Justificar Asistencia'),
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back_ios_new, color: Colors.blue[800]),
+          onPressed: () => Navigator.of(context).pop(),
+        ),
       ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(15.0),
-          child: Form(
-            key: _formKey,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Motivo de la Justificación',
-                  style: TextStyle(
-                    fontSize: 18,
-                    color: Colors.black,
-                  ),
+      body: SafeArea(
+        child: Stack(
+          children: [
+            // Background Gradient
+            Container(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: [
+                    Colors.blue[50]!,
+                    Colors.blue[100]!,
+                  ],
                 ),
-                const SizedBox(height: 8),
-                DropdownButtonFormField(
-                  value: _selectedReason,
-                  items: _reasons
-                      .map((reason) => DropdownMenuItem(
-                            value: reason,
-                            child: Text(reason),
-                          ))
-                      .toList(),
-                  decoration: InputDecoration(
-                    labelText: 'Seleccionar Motivo',
-                    labelStyle: const TextStyle(color: Colors.black),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(8),
-                      borderSide:
-                          BorderSide(color: Colors.blue[600]!, width: 2.0),
-                    ),
-                    enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(8),
-                      borderSide:
-                          BorderSide(color: Colors.blue[600]!, width: 2.0),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(8),
-                      borderSide:
-                          BorderSide(color: Colors.blue[600]!, width: 2.5),
-                    ),
-                  ),
-                  validator: (value) =>
-                      value == null ? 'Seleccione un motivo' : null,
-                  onChanged: (value) {
-                    setState(() {
-                      _selectedReason = value;
-                    });
-                  },
-                ),
-                const SizedBox(height: 16),
-                const Text(
-                  'Descripción',
-                  style: TextStyle(
-                    fontSize: 18,
-                    color: Colors.black,
-                  ),
-                ),
-                const SizedBox(height: 8),
-                TextFormField(
-                  controller: _descriptionController,
-                  maxLines: 4,
-                  decoration: InputDecoration(
-                    labelText: 'Ingrese una descripción detallada',
-                    labelStyle: const TextStyle(color: Colors.black),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(8),
-                      borderSide:
-                          BorderSide(color: Colors.blue[600]!, width: 2.0),
-                    ),
-                    enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(8),
-                      borderSide:
-                          BorderSide(color: Colors.blue[600]!, width: 2.0),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(8),
-                      borderSide:
-                          BorderSide(color: Colors.blue[600]!, width: 2.5),
-                    ),
-                  ),
-                  validator: (value) => value == null || value.isEmpty
-                      ? 'Ingrese una descripción'
-                      : null,
-                ),
-                const SizedBox(height: 16),
-                Center(
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.blue[600],
-                      foregroundColor: Colors.white,
-                      padding: const EdgeInsets.symmetric(
-                          vertical: 15, horizontal: 30),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(15),
-                      ),
-                      elevation: 4,
-                    ),
-                    onPressed: _submitForm,
-                    child: const Text(
-                      'Enviar Justificación',
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                ),
-              ],
+              ),
             ),
-          ),
+
+            // Main Content
+            SingleChildScrollView(
+              child: Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 20.0, vertical: 30),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Header
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          'Justificar\nAsistencia',
+                          style: TextStyle(
+                            fontSize: 32,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.blue[800],
+                          ),
+                        ),
+                        Container(
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(15),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.blue.withOpacity(0.2),
+                                blurRadius: 10,
+                                offset: Offset(0, 5),
+                              )
+                            ],
+                          ),
+                          child: IconButton(
+                            icon: Icon(Icons.notifications_outlined,
+                                color: Colors.blue[800]),
+                            onPressed: () {
+                              // Notification logic
+                            },
+                          ),
+                        )
+                      ],
+                    ).animate().slideX(duration: 400.ms, begin: -0.1),
+
+                    SizedBox(height: 30),
+
+                    // Form Card
+                    Container(
+                      padding: EdgeInsets.all(20),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(20),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.blue.withOpacity(0.1),
+                            blurRadius: 20,
+                            offset: Offset(0, 10),
+                          )
+                        ],
+                      ),
+                      child: Form(
+                        key: _formKey,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            // Reason Dropdown
+                            Text(
+                              'Motivo de Justificación',
+                              style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.blue[800],
+                              ),
+                            ),
+                            SizedBox(height: 10),
+                            DropdownButtonFormField(
+                              value: _selectedReason,
+                              decoration: InputDecoration(
+                                filled: true,
+                                fillColor: Colors.blue[50],
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(15),
+                                  borderSide: BorderSide.none,
+                                ),
+                                contentPadding: EdgeInsets.symmetric(
+                                    horizontal: 15, vertical: 15),
+                              ),
+                              items: _reasons
+                                  .map((reason) => DropdownMenuItem(
+                                        value: reason,
+                                        child: Text(reason),
+                                      ))
+                                  .toList(),
+                              validator: (value) =>
+                                  value == null ? 'Seleccione un motivo' : null,
+                              onChanged: (value) {
+                                setState(() {
+                                  _selectedReason = value as String?;
+                                });
+                              },
+                            ),
+
+                            SizedBox(height: 20),
+
+                            // Description Field
+                            Text(
+                              'Descripción',
+                              style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.blue[800],
+                              ),
+                            ),
+                            SizedBox(height: 10),
+                            TextFormField(
+                              controller: _descriptionController,
+                              maxLines: 4,
+                              decoration: InputDecoration(
+                                filled: true,
+                                fillColor: Colors.blue[50],
+                                hintText: 'Escriba su justificación...',
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(15),
+                                  borderSide: BorderSide.none,
+                                ),
+                                contentPadding: EdgeInsets.all(15),
+                              ),
+                              validator: (value) =>
+                                  value == null || value.isEmpty
+                                      ? 'Ingrese una descripción'
+                                      : null,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ).animate().fadeIn(duration: 500.ms),
+
+                    SizedBox(height: 30),
+
+                    // Submit Button
+                    Center(
+                      child: ElevatedButton(
+                        onPressed: _submitForm,
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.blue[800],
+                          padding: EdgeInsets.symmetric(
+                              horizontal: 50, vertical: 15),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(30),
+                          ),
+                        ),
+                        child: const Text(
+                          'Enviar Justificación',
+                          style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white),
+                        ),
+                      ),
+                    ).animate().slideY(duration: 400.ms, begin: 0.2),
+                  ],
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     );

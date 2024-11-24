@@ -1,4 +1,5 @@
 // config.dart
 class AppConfig {
-  static const String baseUrl = "http://192.168.43.37:8000/admin/api";
+  static const String baseUrl =
+      "https://phpstack-1370959-5055105.cloudwaysapps.com/admin/api";
 }

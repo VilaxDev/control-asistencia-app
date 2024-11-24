@@ -1,3 +1,4 @@
+import 'package:AsistePro/pages/password_reset_page.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:AsistePro/Config/device_identifier.dart';
@@ -291,15 +292,19 @@ class _LoginPageState extends State<LoginPage> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      '¿Necesitas ayuda? ',
+                      '¿Ovildaste la contraseña? ',
                       style: TextStyle(color: Colors.grey[600]),
                     ),
                     TextButton(
                       onPressed: () {
-                        // Aquí puedes agregar la lógica para recuperar contraseña
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => PasswordResetPage()),
+                        );
                       },
                       child: const Text(
-                        'Contáctanos',
+                        'Recuperar',
                         style: TextStyle(
                           color: Color(0xFF1A73E8),
                           fontWeight: FontWeight.bold,

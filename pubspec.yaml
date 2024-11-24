@@ -17,6 +17,7 @@ dependencies:
   flutter_launcher_icons: ^0.14.1
   flutter_svg: ^2.0.14
   device_info_plus: ^11.1.1
+  flutter_animate: ^4.5.0
 
 dev_dependencies:
   flutter_test:
